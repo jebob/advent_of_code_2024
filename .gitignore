@@ -1,6 +1,7 @@
 __pycache__
 .pytest_cache
-
+**/input.txt
+**/small.txt
 
 # Added by cargo
 
