@@ -5,14 +5,6 @@ enum IsAscending {
     False,
     Unknown,
 }
-enum IsAscendingPartTwo {
-    True,
-    False,
-    UnknownNone,
-    UnknownOneUp,
-    UnknownOneDown,
-    UnknownOneBoth,
-}
 
 pub fn part_1() {
     let file_path = "src/day_02/small.txt";
@@ -96,12 +88,12 @@ fn row_is_safe(row: &[usize]) -> bool {
     !unsafety_found
 }
 
-fn row_candidates(row: &[usize]) -> Vec<Vec<usize>>{
+fn row_candidates(row: &[usize]) -> Vec<Vec<usize>> {
     let mut result = vec![];
     result.push(row.to_vec());
-    for idx in 0..row.len(){
+    for idx in 0..row.len() {
         let mut new_row = vec![];
-        for idx2 in 0..row.len(){
+        for idx2 in 0..row.len() {
             if idx2 != idx {
                 new_row.push(row[idx2]);
             }
