@@ -56,31 +56,29 @@ fn row_is_safe(row: &[usize]) -> bool {
                 break;
             };
             match is_ascending {
-                IsAscending::True => {
-                    if this_level <= last_level {
-                        // Unsafe!
-                        unsafety_found = true;
-                        break;
-                    }
+                IsAscending::True if this_level <= last_level => {
+                    // Unsafe!
+                    unsafety_found = true;
+                    break;
                 }
-                IsAscending::False => {
-                    if this_level >= last_level {
-                        // Unsafe!
-                        unsafety_found = true;
-                        break;
-                    }
+                IsAscending::False if this_level >= last_level => {
+                    // Unsafe!
+                    unsafety_found = true;
+                    break;
+                }
+                IsAscending::Unknown if this_level > last_level => {
+                    is_ascending = IsAscending::True;
+                }
+                IsAscending::Unknown if this_level < last_level => {
+                    is_ascending = IsAscending::False;
                 }
                 IsAscending::Unknown => {
-                    if this_level > last_level {
-                        is_ascending = IsAscending::True;
-                    } else if this_level < last_level {
-                        is_ascending = IsAscending::False;
-                    } else {
-                        // Unsafe!
-                        unsafety_found = true;
-                        break;
-                    }
+                    // Unsafe!
+                    unsafety_found = true;
+                    break;
                 }
+                // must be ascending/descending in the correct direction
+                _ => {}
             }
         }
         last_level_option = Some(this_level);
@@ -93,9 +91,9 @@ fn row_candidates(row: &[usize]) -> Vec<Vec<usize>> {
     result.push(row.to_vec());
     for idx in 0..row.len() {
         let mut new_row = vec![];
-        for idx2 in 0..row.len() {
+        for (idx2, element) in row.iter().enumerate() {
             if idx2 != idx {
-                new_row.push(row[idx2]);
+                new_row.push(*element);
             }
         }
         result.push(new_row);

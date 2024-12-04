@@ -30,8 +30,7 @@ pub fn part_1() {
         let str_to_check: String = rows
             .iter()
             .enumerate()
-            .map(|(i_row, row)| row.get(i_col + i_row))
-            .flatten()
+            .filter_map(|(i_row, row)| row.get(i_col + i_row))
             .collect();
         total += xmas_regex.find_iter(&str_to_check).count();
         total += samx_regex.find_iter(&str_to_check).count();
@@ -39,14 +38,13 @@ pub fn part_1() {
         let str_to_check: String = rows
             .iter()
             .enumerate()
-            .map(|(i_row, row)| {
+            .filter_map(|(i_row, row)| {
                 if i_col < i_row {
                     None
                 } else {
                     row.get(i_col - i_row)
                 }
             })
-            .flatten()
             .collect();
         total += xmas_regex.find_iter(&str_to_check).count();
         total += samx_regex.find_iter(&str_to_check).count();
@@ -58,14 +56,13 @@ pub fn part_1() {
         let str_to_check: String = rows
             .iter()
             .enumerate()
-            .map(|(i_row, row)| {
+            .filter_map(|(i_row, row)| {
                 if i_col + nrows < 1 + i_row {
                     None
                 } else {
                     row.get(i_col + nrows - 1 - i_row)
                 }
             })
-            .flatten()
             .collect();
         total += xmas_regex.find_iter(&str_to_check).count();
         total += samx_regex.find_iter(&str_to_check).count();
@@ -73,14 +70,13 @@ pub fn part_1() {
         let str_to_check: String = rows
             .iter()
             .enumerate()
-            .map(|(i_row, row)| {
+            .filter_map(|(i_row, row)| {
                 if i_col + 1 + i_row < nrows {
                     None
                 } else {
                     row.get(i_col + 1 + i_row - nrows)
                 }
             })
-            .flatten()
             .collect();
         total += xmas_regex.find_iter(&str_to_check).count();
         total += samx_regex.find_iter(&str_to_check).count();
