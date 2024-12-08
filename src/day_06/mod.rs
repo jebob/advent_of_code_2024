@@ -106,7 +106,9 @@ pub fn part_2() {
     let mut maze: Vec<Vec<_>> = vec![];
     let player_regex = Regex::new(r"\^").unwrap();
     for (i_row, row) in raw_maze.split("\n").enumerate() {
-        if row.is_empty() {continue;}
+        if row.is_empty() {
+            continue;
+        }
         if let Some(match_) = player_regex.find(row) {
             player_state = Some(PlayerState {
                 x: match_.start(),
@@ -121,33 +123,31 @@ pub fn part_2() {
     let mut visited = HashSet::new();
     let mut obstruction_positions = vec![];
     visited.insert((player_state.x, player_state.y));
-    loop {
-        let next_player_state = match increment_state(&player_state, &maze) {
-            Some(p_state) => p_state,
-            None => break,
-        };
-        
+    while let Some(next_player_state) = increment_state(&player_state, &maze) {
         if !visited.contains(&(next_player_state.x, next_player_state.y)) {
-            let mut alternative_maze: Vec<Vec<_>> = maze.iter().map(|row| row.clone()).collect();
+            let mut alternative_maze: Vec<Vec<_>> = maze.to_vec();
             alternative_maze[next_player_state.y][next_player_state.x] = true;
             if is_infinite_loop(player_state, &alternative_maze) {
                 obstruction_positions.push(next_player_state);
             }
-
         }
         visited.insert((player_state.x, player_state.y));
         player_state = next_player_state;
     }
-    println!("{:?}", obstruction_positions.iter().map(|p_state| (p_state.x, p_state.y)).unique().count());
+    println!(
+        "{:?}",
+        obstruction_positions
+            .iter()
+            .map(|p_state| (p_state.x, p_state.y))
+            .unique()
+            .count()
+    );
 }
 
-fn is_infinite_loop(
-    mut player_state: PlayerState,
-    maze: &Vec<Vec<bool>>,
-) -> bool {
+fn is_infinite_loop(mut player_state: PlayerState, maze: &[Vec<bool>]) -> bool {
     let mut visited = HashSet::new();
     loop {
-        let next_player_state = match increment_state(&player_state, &maze) {
+        let next_player_state = match increment_state(&player_state, maze) {
             Some(p_state) => p_state,
             None => return false, // gone off the edge of the board: not an infinite loop
         };
@@ -160,7 +160,7 @@ fn is_infinite_loop(
     }
 }
 
-fn increment_state(player_state: &PlayerState, maze: &Vec<Vec<bool>>) -> Option<PlayerState> {
+fn increment_state(player_state: &PlayerState, maze: &[Vec<bool>]) -> Option<PlayerState> {
     let nrows = maze.len();
     let ncols = maze[0].len();
     let (next_x, next_y) = match player_state.dir {
@@ -190,7 +190,7 @@ fn increment_state(player_state: &PlayerState, maze: &Vec<Vec<bool>>) -> Option<
         }
         _ => panic!("what?"),
     };
-    let mut next_player_state = player_state.clone();
+    let mut next_player_state = *player_state;
     // println!("{:?}{:?}", next_x, next_y);
     if maze[next_y][next_x] {
         next_player_state.dir = (player_state.dir + 1) % 4;
