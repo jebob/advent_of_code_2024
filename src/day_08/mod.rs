@@ -19,9 +19,8 @@ pub fn part_1() {
         }
     }
     let result = antennas
-        .iter()
-        .map(|(_, locations)| find_antinodes(&locations, nrows, ncols))
-        .flatten()
+        .values()
+        .flat_map(|locations| find_antinodes(locations, nrows, ncols))
         .unique()
         .count();
     println!("{:?}", result);
@@ -75,9 +74,8 @@ pub fn part_2() {
         }
     }
     let result = antennas
-        .iter()
-        .map(|(_, locations)| find_antinodes_part2(&locations, nrows, ncols))
-        .flatten()
+        .values()
+        .flat_map(|locations| find_antinodes_part2(locations, nrows, ncols))
         .unique()
         .count();
     println!("{:?}", result);
