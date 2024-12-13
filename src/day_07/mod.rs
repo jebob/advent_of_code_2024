@@ -74,14 +74,24 @@ fn count_combinations_part2(target: usize, numbers: Vec<usize>) -> usize {
     count_combinations_part2_inner(target, rev_numbers, current)
 }
 
-fn count_combinations_part2_inner(target: usize, mut rev_numbers: Vec<usize>, current: usize) -> usize {
+fn count_combinations_part2_inner(
+    target: usize,
+    mut rev_numbers: Vec<usize>,
+    current: usize,
+) -> usize {
     match rev_numbers.pop() {
         None => (current == target) as usize,
         Some(_) if current > target => 0, // short-circuit for performance
         Some(next) => {
             count_combinations_part2_inner(target, rev_numbers.clone(), current + next)
                 + count_combinations_part2_inner(target, rev_numbers.clone(), current * next)
-                + count_combinations_part2_inner(target, rev_numbers.clone(), (current.to_string() + &next.to_string()).parse::<usize>().unwrap())
+                + count_combinations_part2_inner(
+                    target,
+                    rev_numbers.clone(),
+                    (current.to_string() + &next.to_string())
+                        .parse::<usize>()
+                        .unwrap(),
+                )
         }
     }
 }
